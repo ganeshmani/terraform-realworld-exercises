@@ -1,0 +1,36 @@
+name: Nodejs AWS EC2 Workflow
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "nodejs-aws-ec2/**"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Build and deploy
+        uses: appleboy/ssh-action@master
+        env:
+          PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+          HOST_NAME: ${{ secrets.HOST_NAME }}
+          USER_NAME: ${{ secrets.USER_NAME }}
+
+        run: |
+          echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
+          ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
+
+            # Now we are in the remote server
+            cd /var/www/html &&
+            git pull origin main &&
+            cd nodejs-aws-ec2 &&
+            cd app &&
+            sudo npm install &&
+            sudo pm2 start index.js
+          '
