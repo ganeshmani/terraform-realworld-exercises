@@ -16,6 +16,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Build and deploy
+        # This action is used to connect to the remote server
         uses: appleboy/ssh-action@master
         env:
           PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
