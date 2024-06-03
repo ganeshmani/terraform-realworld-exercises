@@ -27,6 +27,6 @@ jobs:
           ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOST_NAME} '
 
           echo "Copying files to remote server"
-          cd /home/ubuntu/nodejs-aws-ec2
+          cd /home/ubuntu && mkdir nodejs-aws-ec2 && cd nodejs-aws-ec2
           git pull origin main
           '
