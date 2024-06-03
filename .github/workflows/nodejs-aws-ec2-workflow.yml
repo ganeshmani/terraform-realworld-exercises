@@ -12,34 +12,37 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - name: Checkout code on the runner
+        uses: actions/checkout@v2
 
-      - name: Build and deploy
-        # This action is used to connect to the remote server
+      - name: Deploy to EC2
         env:
           PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
           HOST_NAME: ${{ secrets.HOST_NAME }}
           USER_NAME: ${{ secrets.USER_NAME }}
-          GIT_URL: ${{ secrets.GIT_URL }}
+          REPO_URL: ${{ secrets.GIT_URL }}
 
         run: |
           echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
-          ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOST_NAME} '
+          ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOST_NAME} << 'EOF'
+            # Navigate to the home directory
+            cd /home/ubuntu
 
-          cd /home/ubuntu
-
-          echo "Checking if the repository exists..."
-          if [ ! -d "nodejs-aws-ec2" ]; then
-              # If it doesn't exist, clone the repository
+            # Check if the repository directory exists
+            if [ ! -d "nodejs-aws-ec2" ]; then
+              echo "Repository not found. Cloning..."
               git clone ${REPO_URL} nodejs-aws-ec2
             else
-              # If it exists, navigate to the repository and pull the latest changes
+              echo "Repository found. Pulling latest changes..."
               cd nodejs-aws-ec2
               git fetch origin main
               git reset --hard origin/main
             fi
-          cd /home/ubuntu/nodejs-aws-ec2/app
-          sudo npm install
-          sudo pm2 restart index.js || sudo pm2 start index.js
-          '
+
+            # Navigate to the app directory and install dependencies
+            cd /home/ubuntu/nodejs-aws-ec2/app
+            sudo npm install
+
+            # Restart the application
+            sudo pm2 restart index.js || sudo pm2 start index.js
+          EOF
