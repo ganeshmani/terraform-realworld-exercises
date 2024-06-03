@@ -21,12 +21,25 @@ jobs:
           PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
           HOST_NAME: ${{ secrets.HOST_NAME }}
           USER_NAME: ${{ secrets.USER_NAME }}
+          GIT_URL: ${{ secrets.GIT_URL }}
 
         run: |
           echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
           ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOST_NAME} '
 
-          echo "Copying files to remote server"
-          cd /home/ubuntu && mkdir nodejs-aws-ec2 && cd nodejs-aws-ec2
-          git pull origin main
+          cd /home/ubuntu
+
+          echo "Checking if the repository exists..."
+          if [ ! -d "nodejs-aws-ec2" ]; then
+              # If it doesn't exist, clone the repository
+              git clone ${REPO_URL} nodejs-aws-ec2
+            else
+              # If it exists, navigate to the repository and pull the latest changes
+              cd nodejs-aws-ec2
+              git fetch origin main
+              git reset --hard origin/main
+            fi
+          cd /home/ubuntu/nodejs-aws-ec2/app
+          sudo npm install
+          sudo pm2 restart index.js || sudo pm2 start index.js
           '
