@@ -31,7 +31,7 @@ jobs:
             # Check if the repository directory exists
             if [ ! -d "nodejs-aws-ec2" ]; then
               echo "Repository not found. Cloning..."
-              git clone ${REPO_URL} nodejs-aws-ec2
+              git clone "$REPO_URL" nodejs-aws-ec2
             else
               echo "Repository found. Pulling latest changes..."
               cd nodejs-aws-ec2
