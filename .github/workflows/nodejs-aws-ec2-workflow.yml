@@ -27,9 +27,12 @@ jobs:
           ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOST_NAME} '
 
             # Now we are in the remote server
+            cd /home/ubuntu &&
+            git checkout main &&
+            git fetch origin main &&
             git pull origin main &&
             cd nodejs-aws-ec2 &&
             cd app &&
             sudo npm install &&
-            sudo pm2 start index.js
+            sudo pm2 restart index.js
           '
