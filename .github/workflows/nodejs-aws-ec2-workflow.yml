@@ -27,7 +27,6 @@ jobs:
           ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOST_NAME} '
 
             # Now we are in the remote server
-            cd /var/www/html &&
             git pull origin main &&
             cd nodejs-aws-ec2 &&
             cd app &&
