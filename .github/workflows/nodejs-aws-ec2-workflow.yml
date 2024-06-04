@@ -29,18 +29,18 @@ jobs:
             cd /home/ubuntu
 
             # Check if the repository directory exists
-            if [ ! -d "nodejs-aws-ec2" ]; then
+            if [ ! -d "terraform-realworld-exercises" ]; then
               echo "Repository not found. Cloning..."
-              git clone "$REPO_URL" nodejs-aws-ec2
+              git clone $REPO_URL
             else
               echo "Repository found. Pulling latest changes..."
-              cd nodejs-aws-ec2
+              cd terraform-realworld-exercises
               git fetch origin main
               git reset --hard origin/main
             fi
 
             # Navigate to the app directory and install dependencies
-            cd /home/ubuntu/nodejs-aws-ec2/app
+            cd /home/ubuntu/terraform-realworld-exercises/nodejs-aws-ec2/app
             sudo npm install
 
             # Restart the application
