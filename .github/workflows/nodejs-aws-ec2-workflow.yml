@@ -44,5 +44,6 @@ jobs:
             sudo npm install
 
             # Restart the application
-            sudo pm2 restart index.js || sudo pm2 start index.js
+            pm2 start index.js --name "nodejs-app"
+
           EOF

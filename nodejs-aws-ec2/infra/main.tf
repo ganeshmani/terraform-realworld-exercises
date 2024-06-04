@@ -27,6 +27,10 @@ resource "aws_instance" "nodejs-ec2-instance" {
     tags_all = {
         Name = "nodejs-ec2-instance"
     }
+
+    lifecycle {
+      prevent_destroy = true
+    }
 }
 
 resource "aws_default_vpc" "default" {
