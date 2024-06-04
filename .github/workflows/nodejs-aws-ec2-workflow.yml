@@ -31,8 +31,7 @@ jobs:
             # Check if the repository directory exists
             if [ ! -d "terraform-realworld-exercises" ]; then
               echo "Repository not found. Cloning... $REPO_URL"
-              echo "$REPO_URL"
-              git clone "$REPO_URL"
+              git clone https://github.com/ganeshmani/terraform-realworld-exercises.git
             else
               echo "Repository found. Pulling latest changes..."
               cd terraform-realworld-exercises
