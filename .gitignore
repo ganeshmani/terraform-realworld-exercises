@@ -14,3 +14,5 @@
 
 # Ignore hcl file
 *.terraform.lock.hcl
+
+terraform-lambda-dynamodb/app/build
