@@ -1,0 +1,53 @@
+# name: Nodejs AWS ECS Zero Downtime Workflow
+
+# on:
+#   push:
+#     branches:
+#       - main
+#     paths:
+#       - "terraform-nodejs-zero-downtime/**"
+
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest
+
+#   steps:
+#     - name: Checkout code on the runner
+#       uses: actions/checkout@v3
+
+#     - name: Setup Docker BuildX
+#       uses: docker/setup-buildx-action@v2
+
+#     - name: Login into AWS ECR
+#       id: ecr-login
+#       uses: aws-actions/amazon-ecr-login@v1
+
+#     - name: Build Docker image
+#       run: |
+#         IMAGE_TAG=latest  # or use ${{ github.sha }} for a unique tag
+#         docker build -t ${{ secrets.ECR_REPOSITORY_URI }}:$IMAGE_TAG .
+
+#     - name: Push Docker image to ECR
+#       run: |
+#         IMAGE_TAG=latest  # or use ${{ github.sha }} for a unique tag
+#         docker tag ${{ secrets.ECR_REPOSITORY }}:$IMAGE_TAG ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_REPOSITORY }}:$IMAGE_TAG
+#         docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_REPOSITORY }}:$IMAGE_TAG
+
+#     - name: Set up Terraform
+#       uses: hashicorp/setup-terraform@v2
+
+#     - name: Configure AWS credentials
+#       uses: aws-actions/configure-aws-credentials@v2
+
+#     - name: Terraform Init
+#       run: terraform init
+
+#     - name: Terraform Plan
+#       id: tf-plan
+#       run: terraform plan -out=tfplan
+#       working-directory: ./infra
+
+#     - name: Terraform Apply
+#       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+#       run: terraform apply -auto-approve tfplan
+#       working-directory: ./infra

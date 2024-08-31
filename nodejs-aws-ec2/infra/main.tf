@@ -29,7 +29,7 @@ resource "aws_instance" "nodejs-ec2-instance" {
     }
 
     lifecycle {
-      prevent_destroy = true
+      prevent_destroy = false
     }
 }
 

@@ -16,3 +16,4 @@
 *.terraform.lock.hcl
 
 terraform-lambda-dynamodb/app/build
+terraform-nodejs-zero-downtime/app/build
